@@ -16,17 +16,19 @@ import kotlinx.android.synthetic.main.activity_sign_in.et_email
 import kotlinx.android.synthetic.main.activity_sign_in.et_password
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
-class SignIn_Activity : Base_Activity(){
+class SignIn_Activity : Base_Activity() {
     private lateinit var auth: FirebaseAuth
+
     // ...
 // Initialize Firebase Auth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+
         auth = Firebase.auth
 
         supportactionbar()
-        toolbar_sign_In_activity.setNavigationOnClickListener{
+        toolbar_sign_In_activity.setNavigationOnClickListener {
             onBackPressed()
         }
 
@@ -35,6 +37,7 @@ class SignIn_Activity : Base_Activity(){
         }
 
     }
+
     fun supportactionbar() {
         setSupportActionBar(toolbar_sign_In_activity)
         val actionbar = supportActionBar
@@ -43,16 +46,15 @@ class SignIn_Activity : Base_Activity(){
             actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
         }
     }
-
     private fun registeruser(){
         var email:String=et_email.text.toString().trim{it<=' '}
         var password:String=et_password.text.toString().trim{it<=' '}
 
-        if (signinuser(email, password)){
+        if (validatesigninuser(email, password)){
             showprogressdialog("Loading...please wait")
-            hideprogressdialog()
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
+                    hideprogressdialog()
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
@@ -70,22 +72,18 @@ class SignIn_Activity : Base_Activity(){
 
         }
     }
-
-
-    //sign in user function
-    private fun signinuser (email:String,password:String):Boolean{
-        return when{
-            TextUtils.isEmpty(email)->{
-                showsnackbarerror("email cannot be empty")
-                false
-            }
-            TextUtils.isEmpty(password)->{
-                showsnackbarerror("email cannot be empty")
-                false
-            }else->true
-        }
+private fun validatesigninuser(email:String,password:String):Boolean{
+return when{
+    TextUtils.isEmpty(email)->{
+        showsnackbarerror("please enter your email")
+        false
     }
+    TextUtils.isEmpty(password)->{
+        showsnackbarerror("please enter your password")
+        false
+    }
+    else -> true
+}
 
-
-
+}
 }
