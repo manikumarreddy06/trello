@@ -1,11 +1,12 @@
-package com.myproject.trello
+package com.myproject.trello.Activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.myproject.trello.R
 
-class Sign_up_Activity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+        setContentView(R.layout.activity_main)
     }
 }

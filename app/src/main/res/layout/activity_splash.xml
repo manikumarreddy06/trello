@@ -8,7 +8,7 @@
     android:background="@drawable/ic_splash_background"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".Splash_Activity">
+    tools:context=".Activities.Splash_Activity">
 
     <TextView
         android:id="@+id/tv_app_name"
