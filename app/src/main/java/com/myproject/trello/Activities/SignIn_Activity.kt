@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myproject.trello.R
+import com.myproject.trello.models.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import kotlinx.android.synthetic.main.activity_sign_in.et_email
 import kotlinx.android.synthetic.main.activity_sign_in.et_password
@@ -45,6 +46,7 @@ class SignIn_Activity : Base_Activity() {
             actionbar.setDisplayHomeAsUpEnabled(true)
             actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
         }
+
     }
     private fun registeruser(){
         var email:String=et_email.text.toString().trim{it<=' '}
@@ -52,14 +54,18 @@ class SignIn_Activity : Base_Activity() {
 
         if (validatesigninuser(email, password)){
             showprogressdialog("Loading...please wait")
+            //initialse firebase
             auth.createUserWithEmailAndPassword(email, password)
+                //task on complete listener
                 .addOnCompleteListener(this) { task ->
                     hideprogressdialog()
+
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
                         val user = auth.currentUser
                         startActivity(Intent(this,MainActivity::class.java))
+                        finish()
                         // updateUI(user)
                     } else {
                         // If sign in fails, display a message to the user.
@@ -72,6 +78,7 @@ class SignIn_Activity : Base_Activity() {
 
         }
     }
+    //form validation
 private fun validatesigninuser(email:String,password:String):Boolean{
 return when{
     TextUtils.isEmpty(email)->{
@@ -86,4 +93,10 @@ return when{
 }
 
 }
+
+    fun signinsuccess(user:User) {
+        hideprogressdialog()
+        finish()
+
+    }
 }

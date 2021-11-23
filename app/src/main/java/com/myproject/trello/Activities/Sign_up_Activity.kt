@@ -7,7 +7,9 @@ import android.widget.Toast
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.myproject.trello.Firebase.Firestore
 import com.myproject.trello.R
+import com.myproject.trello.models.User
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class Sign_up_Activity : Base_Activity() {
@@ -26,6 +28,13 @@ class Sign_up_Activity : Base_Activity() {
             registeruser()
         }
     }
+    fun userregisteredsuccess(){
+        Toast.makeText(this,"you have successfully created a account with the email" +
+                "",Toast.LENGTH_SHORT).show()
+        hideprogressdialog()
+        FirebaseAuth.getInstance().signOut()
+        finish()
+    }
 
 //set support action bar
     fun supportactionbar(){
@@ -36,6 +45,7 @@ class Sign_up_Activity : Base_Activity() {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
     }
     }
+
    //fun to register a user
     private fun registeruser(){
         val name:String=et_name.text.toString().trim{it<= ' '}
@@ -44,14 +54,12 @@ class Sign_up_Activity : Base_Activity() {
        if (validateform(name, email, password)){
            showprogressdialog("loading")
            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-               hideprogressdialog()
                if (task.isSuccessful) {
                    val firebaseUser: FirebaseUser = task.result!!.user!!
                    val registeredemail=firebaseUser.email!!
-                   Toast.makeText(this,"you have successfully created a account with the email${email}" +
-                           "",Toast.LENGTH_SHORT).show()
-                   FirebaseAuth.getInstance().signOut()
-                   finish()
+                   val user= User(firebaseUser.uid,name,registeredemail)
+                   Firestore().registeruser(this,user)
+                   //finish()
                }else{
                    Toast.makeText(this,"registration failed",Toast.LENGTH_SHORT).show()
                }
@@ -78,6 +86,7 @@ class Sign_up_Activity : Base_Activity() {
             else -> true
         }
     }
+
 
 }
 
